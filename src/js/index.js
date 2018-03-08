@@ -9,6 +9,6 @@ import {Home} from './Home.jsx';
 
 // Render application to DOM
 ReactDOM.render(
-    <Home />,
+    <Home/>,
     document.querySelector('#app')
 );
