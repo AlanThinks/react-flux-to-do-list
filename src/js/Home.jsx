@@ -15,17 +15,18 @@ export class Home extends Flux.View {
 
     }
         
-        // if you dont define this function you get an error
-        // this function gets automatically called when SessionStore state changes
-        handleStoreChanges(){
-            // retreive any store homeTasksArray
-            let updatedTasksArray = myStore.returnTasksArray();
-            this.setState({homeTasksArray: updatedTasksArray})
-        }
+     // if you dont define this function you get an error
+    // this function gets automatically called when SessionStore state changes
+    handleStoreChanges(){
+        // retreive any store homeTasksArray
+        let updatedTasksArray = myStore.returnTasksArray();
+        this.setState({homeTasksArray: updatedTasksArray})
+     }
     
     handleFormSubmit(e) {
         e.preventDefault()
         myActions.addTask(this.state.taskInput)
+        this.setState({taskInput:""})
         console.log('form submitted')
     }
 
@@ -53,7 +54,7 @@ export class Home extends Flux.View {
                     </form>
                 </header>
                 <section className="main">
-                    <ul className="todo-lisvt">
+                    <ul className="todo-list">
                         {tasksToRender}
                     </ul>
                 </section>

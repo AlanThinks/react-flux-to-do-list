@@ -4,11 +4,7 @@ class ToDoStore extends Flux.Store{
     constructor(){
         super();
         this.state = {
-            tasks: [{
-                id: 342,
-                task: "my first task"
-            },
-        ] 
+            tasks: [] 
         }
     }
     
@@ -17,18 +13,6 @@ class ToDoStore extends Flux.Store{
         let tasksArray = this.state.tasks
         
         tasksArray.push(incomingTaskObject)
-        /*
-        tasksArray = [
-            {
-                id: 342,
-                task: 'my first task
-            },
-            {
-                id: new random number,
-                task: 'the new incoming task,
-            }
-        ]
-        */
 
         this.setStoreState({tasks: tasksArray}).emit('change');
     }
