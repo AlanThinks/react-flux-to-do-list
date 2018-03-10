@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node_modules/.bin/webpack-dev-server --host 0.0.0.0 --port 9000",
-    "build": "webpack --config webpack.config.js"
+    "dev": "node_modules/.bin/webpack-dev-server --host localhoset --port 9000",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack-dev-server --config ./webpack.config.js -w",
+    "serve": "webpack --config webpack.config.js && serve"
   },
   "author": "",
   "license": "ISC",
@@ -40,7 +42,7 @@
     "query-string": "^5.0.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-flux-dash": "^1.0.3",
+    "react-flux-dash": "^1.1.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2"
   }

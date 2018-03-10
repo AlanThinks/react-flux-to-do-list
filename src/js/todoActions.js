@@ -1,15 +1,24 @@
-import {FluxDispatcher} from './todoStore';
+import Flux from 'react-flux-dash';
 
-export function addTask(task){
-  FluxDispatcher.dispatch({
-    actionType: 'TODO_ADD_TASK',
-    actionData: task
-  });
-}
+class ToDoActions extends Flux.Action{
+    
+    addTask(taskText){
+      let randomId = Math.floor(Math.random()*10000)
 
-export function deleteTask(taskId){
-  FluxDispatcher.dispatch({
-    actionType: 'TODO_DELETE_TASK',
-    actionData: taskId
-  });
-}
+        let incomingTask = {
+          id: randomId,
+          task: taskText
+        }
+
+        this.dispatch('ToDoStore.storeAddTask', incomingTask);
+                        // look for _storeAddTask()
+    }
+
+    removeTask(id){
+      this.dispatch('ToDoStore.removeTask')
+    }
+
+  }
+
+  let myActions = new ToDoActions()
+  export default myActions

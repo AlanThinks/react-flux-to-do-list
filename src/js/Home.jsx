@@ -1,27 +1,39 @@
 import React from 'react';
+import myActions from './todoActions';
+import Flux from 'react-flux-dash';
+import myStore from './todoStore';
 
-import * as todoActions from './todoActions';
-
-export class Home extends React.Component {
+export class Home extends Flux.View {
 
     constructor() {
         super();
+        this.state={
+            taskInput: "",
+            homeTasksArray:[]
+        }
+        this.bindStore(myStore)
 
     }
-
-    componentDidMount() {
-
-    }
-
+        
+        // if you dont define this function you get an error
+        // this function gets automatically called when SessionStore state changes
+        handleStoreChanges(){
+            // retreive any store homeTasksArray
+            let updatedTasksArray = myStore.returnTasksArray();
+            this.setState({homeTasksArray: updatedTasksArray})
+        }
+    
     handleFormSubmit(e) {
-
+        e.preventDefault()
+        myActions.addTask(this.state.taskInput)
+        console.log('form submitted')
     }
 
     render() {
-        var tasksToRender = this.state.data.map(function (task) {
+        let tasksToRender = this.state.homeTasksArray.map(function (task) {
             return (<li key={task.id}>
                 <div className="view">
-                    <label>{task.title}</label>
+                    <label>{task.task}</label>
                     <button className="destroy" onClick={() => todoActions.deleteTask(task.id)}></button>
                 </div>
             </li>);
@@ -30,7 +42,7 @@ export class Home extends React.Component {
             <section className="todoapp">
                 <header className="header">
                     <h1>todos</h1>
-                    <form onSubmit={this.handleFormSubmit.bind(this)}>
+                    <form onSubmit={(e)=>this.handleFormSubmit(e)}>
                         <input
                             autoFocus={true}
                             className="new-todo"
@@ -41,14 +53,14 @@ export class Home extends React.Component {
                     </form>
                 </header>
                 <section className="main">
-                    <ul className="todo-list">
+                    <ul className="todo-lisvt">
                         {tasksToRender}
                     </ul>
                 </section>
                 <footer className="footer">
           <span className="todo-count">
             <strong>
-              {this.state.data.filter(key => !key.done).length}
+              {this.state.homeTasksArray.filter(key => !key.done).length}
             </strong> item left
           </span>
                 </footer>

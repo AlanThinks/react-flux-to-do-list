@@ -1,59 +1,50 @@
-import EventEmmiter from 'events';
-import {Dispatcher} from 'flux';
+import Flux from 'react-flux-dash';
 
-export const FluxDispatcher = new Dispatcher();
-
-class TodoStore extends EventEmmiter {
-
-    constructor() {
+class ToDoStore extends Flux.Store{
+    constructor(){
         super();
-        this.state = {};
-        this.state.todos = [
-            {done: false, title: 'Make the bed', id: (Math.random() * 10)},
-            {done: false, title: 'Wash my hands', id: (Math.random() * 10)},
-            {done: false, title: 'Eat', id: (Math.random() * 10)},
-            {done: false, title: 'Walk the dog', id: (Math.random() * 10)}
-        ];
-        FluxDispatcher.register(this.handleActions.bind(this));
-    }
-
-    getAllTasks() {
-        return this.state.todos;
-    }
-
-    addTask(data) {
-        console.log('Add this task: ', data);
-        const newState = {
-            todos: this.state.todos.concat([{
-                done: false,
-                title: data,
-                id: (Math.random() * 10)
-            }])
-        };
-        this.state = Object.assign(this.state, newState);
-        this.emit('change');
-    }
-
-    deleteTask(taskId) {
-        console.log('deleting the task');
-        const newState = {
-            todos: this.state.todos.filter((task) => task.id != taskId)
-        };
-        this.state = Object.assign(this.state, newState);
-        this.emit('change');
-    }
-
-    handleActions(action) {
-        console.log('We have received the action', action);
-        switch (action.actionType) {
-            case "TODO_ADD_TASK":
-                this.addTask(action.actionData);
-                break;
-            case "TODO_DELETE_TASK":
-                this.deleteTask(action.actionData);
-                break;
+        this.state = {
+            tasks: [{
+                id: 342,
+                task: "my first task"
+            },
+        ] 
         }
     }
+    
+    //you are forced to use _ to avoid using the setters anywhere else
+    _storeAddTask(incomingTaskObject){
+        let tasksArray = this.state.tasks
+        
+        tasksArray.push(incomingTaskObject)
+        /*
+        tasksArray = [
+            {
+                id: 342,
+                task: 'my first task
+            },
+            {
+                id: new random number,
+                task: 'the new incoming task,
+            }
+        ]
+        */
+
+        this.setStoreState({tasks: tasksArray}).emit('change');
+    }
+    //you are forced to use _ to avoid using the setters anywhere else
+    _removeTask(data){
+        //set the the new store state and emit
+        //this.setStoreState({ autenticated: data.autenticated }).emit();
+        //you can specify an event name if you want
+        this.setStoreState({ tasks: task }).emit('change');
+    }
+
+    returnTasksArray(){
+        return this.state.tasks;
+    }
+    
 }
 
-export var todoStore = new TodoStore();
+    let myStore = new ToDoStore()
+    export default myStore;
