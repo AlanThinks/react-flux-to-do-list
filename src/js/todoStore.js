@@ -4,7 +4,9 @@ class ToDoStore extends Flux.Store {
   constructor() {
     super();
     this.state = {
-      tasks: []
+      tasks: [],
+      totalTasksCreated: 0,
+      totalTasksRemoved: 0
     };
   }
 
@@ -14,31 +16,49 @@ class ToDoStore extends Flux.Store {
 
     tasksArray.push(incomingTaskObject);
 
-    this.setStoreState({ tasks: tasksArray }).emit();
-    //apparently in current Dash version 1.0.3 it works without specifying the event name aka: 'change'
+    this.setStoreState({ 
+        tasks: tasksArray,
+        totalTasksCreated: this.state.totalTasksCreated+1, //Here I up the total count of tasks created ever
+        }).emit();
+        /*If emit() is not specified an event name (Example: "TASK ADDED") then it will just pass on internally an event called 'change'
+        which by default will be listened to at home by this.bindStore(myStore) */
+
   }
   //you are forced to use _ to avoid using the setters anywhere else
-  _removeTask(index) {
-    let updatingTaskArray = this.state.tasks.filter((taskObj, indx) => index !== indx);
-    /*Above: ran filter method on the tasks array that we brought from Home via removeTask action,
-          filter only returns each value(taskObj) as long as it meets the criteria
-          in the callback function. In this case it's checking if the incoming 'index'
-          is NOT the same as that items 'indx', if that's true then the task can stay
-          in the array and it will be returned to the new array 'updatingTaskArray'.
+  _removeTask(incomingIndex) {
+    let updatingTaskArray = this.state.tasks.filter(
+      (taskObj, index) => incomingIndex !== index
 
-          If the current 'indx' matches the 'index' that we brought from home then it means
-          that that particular element/task of the array was the one who's "remove button"
-          was clicked, therefore we will not return it to the "updatingTaskArray"
+    );
+        /* Above: Ran filter method on the this.state.tasks array.
+           filter() only returns each value(taskObj) back in a new array as long as it meets
+           the criteria in the callback function. In this case the criteria checks each taskObj's
+           index and it returns it into the new updatingTaskArray as long as it was NOT the same
+           index as the one that was clicked to be removed (incomingIndex)
+
+           If the current 'index' does match the 'incomingIndex' that we brought from home then it means
+           that that particular element/task of the array was the one who's "remove button"
+           was clicked, therefore we will not return it to the "updatingTaskArray" and it will dissapear
+           from list once it's setState back at home and it's re-rendered.
         */
-    this.setStoreState({ tasks: updatingTaskArray }).emit("change");
+
+        // Below is why these are called "setters" because they update the StoreState with all the new data
+    this.setStoreState({ 
+        tasks: updatingTaskArray,
+        totalTasksRemoved: this.state.totalTasksRemoved+1
+     }).emit("change"); //Here I expressely emitted an event by name 'change' which home by default will listen to.
+  }
+
+  _storeMarkDone(incomingTasksArr) {
+    this.setStoreState({ tasks: incomingTasksArr }).emit(); //since this array was already updated in todoActions, I just need to update the StoreState
   }
 
   /*The method below doesn't need an _underscore because it's not a "setter" (does not update setStoreState)
     Instead it's just used in Home to pull back the updated information from the store.
     Check out method in Home "handleStoreChanges()", it's part of Dash.
     */
-  returnTasksArray() {
-    return this.state.tasks;
+  returnAllData() {
+    return this.state;
   }
 }
 

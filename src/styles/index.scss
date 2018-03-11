@@ -250,7 +250,9 @@ label[for='toggle-all'] {
     color: #737373;
   }
 }
-
+.done{
+  background-color: #d4fcf4;
+}
 .todo-list {
   margin: 0;
   padding: 0;
@@ -260,6 +262,15 @@ label[for='toggle-all'] {
     font-size: 24px;
     box-shadow: 0 -1px 0 #ededed;
     overflow: hidden;
+    &:hover{
+      background-color: #f9f9f9;  
+    }
+    &:active{
+      background-color: #d4fcf4;
+    }
+    &.done{
+      background-color: #d4fcf4;
+    }
     &:last-child {
       border-bottom: none;
     }
